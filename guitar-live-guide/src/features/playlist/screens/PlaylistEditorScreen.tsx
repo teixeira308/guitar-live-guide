@@ -155,6 +155,15 @@ export const PlaylistEditorScreen = ({ playlistId, onBack }: Props) => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
+        <style>{`
+          ion-content, ion-header, ion-toolbar, ion-list, ion-item, ion-item-divider, ion-item-sliding {
+            --background: #000007 !important;
+            --ion-background-color: #000007 !important;
+            --ion-item-background: #000007 !important;
+            --ion-toolbar-background: #000007 !important;
+            background: #000007 !important;
+          }
+        `}</style>
         {loading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: '2rem' }}>
             <IonSpinner />
