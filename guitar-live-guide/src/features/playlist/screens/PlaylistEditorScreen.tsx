@@ -118,7 +118,7 @@ export const PlaylistEditorScreen = ({ playlistId, onBack }: Props) => {
         ) : playlistSongs.length === 0 ? (
           <IonText color="medium">
             <p style={{ textAlign: 'center', padding: '2rem' }}>
-              No songs in this playlist yet.
+              Nenhuma música nesta playlist ainda.
             </p>
           </IonText>
         ) : (
@@ -126,7 +126,7 @@ export const PlaylistEditorScreen = ({ playlistId, onBack }: Props) => {
             {playlistSongs.map((ps, idx) => (
               <IonItemSliding key={ps.id}>
                 <IonItemOptions side="end">
-                  <IonItemOption color="danger" onClick={() => handleRemove(ps.id)} aria-label={`Remove ${ps.song?.name ?? 'Unknown'}`}>
+                  <IonItemOption color="danger" onClick={() => handleRemove(ps.id)} aria-label={`Remover ${ps.song?.name ?? 'Desconhecida'}`}>
                     <IonIcon slot="icon-only" icon={trash} />
                   </IonItemOption>
                 </IonItemOptions>
@@ -135,7 +135,7 @@ export const PlaylistEditorScreen = ({ playlistId, onBack }: Props) => {
                     <IonText color="medium">{idx + 1}</IonText>
                   </IonLabel>
                   <IonLabel>
-                    <h2>{ps.song?.name ?? 'Unknown'}</h2>
+                    <h2>{ps.song?.name ?? 'Desconhecida'}</h2>
                     <p>{ps.song?.artist}</p>
                   </IonLabel>
                 </IonItem>
@@ -154,10 +154,10 @@ export const PlaylistEditorScreen = ({ playlistId, onBack }: Props) => {
           initialBreakpoint={0.5}
         >
           <div style={{ padding: '1rem' }}>
-            <h2 style={{ fontWeight: 700, marginBottom: '1rem' }}>Add Songs</h2>
+            <h2 style={{ fontWeight: 700, marginBottom: '1rem' }}>Adicionar Músicas</h2>
             {songsNotInPlaylist.length === 0 ? (
               <IonText color="medium">
-                <p>All songs are already in this playlist.</p>
+                <p>Todas as músicas já estão nesta playlist.</p>
               </IonText>
             ) : (
               <IonList inset>
@@ -182,7 +182,7 @@ export const PlaylistEditorScreen = ({ playlistId, onBack }: Props) => {
                 onClick={handleAddSongs}
                 disabled={selectedSongIds.size === 0}
               >
-                Add ({selectedSongIds.size})
+                Adicionar ({selectedSongIds.size})
               </IonButton>
               <IonButton
                 expand="block"
@@ -192,7 +192,7 @@ export const PlaylistEditorScreen = ({ playlistId, onBack }: Props) => {
                   setSelectedSongIds(new Set())
                 }}
               >
-                Cancel
+                Cancelar
               </IonButton>
             </div>
           </div>

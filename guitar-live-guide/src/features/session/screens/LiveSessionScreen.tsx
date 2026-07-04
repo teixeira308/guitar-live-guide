@@ -324,7 +324,7 @@ export const LiveSessionScreen = ({
             {!activeSession && (
               <div style={{ padding: '1rem' }}>
                 <IonButton expand="block" size="large" onClick={handleStartSession}>
-                  Start Session
+                  Iniciar Sessão
                 </IonButton>
               </div>
             )}
@@ -345,11 +345,11 @@ export const LiveSessionScreen = ({
               <IonTextarea
                 value={currentSongNotes}
                 onIonInput={(e) => handleNotesChange(String(e.detail.value))}
-                placeholder="Add notes..."
+                placeholder="Adicionar anotações..."
                 rows={1}
                 autoGrow
                 fill="outline"
-                label="Notes"
+                label="Anotações"
                 labelPlacement="floating"
               />
             </div>
@@ -370,7 +370,7 @@ export const LiveSessionScreen = ({
               fill="clear"
               onClick={handlePrevious}
               disabled={currentIndex <= 0 || !activeSession}
-              aria-label="Previous song"
+              aria-label="Música anterior"
             >
               <IonIcon slot="icon-only" icon={playSkipBack} style={{ fontSize: 28 }} />
             </IonButton>
@@ -379,7 +379,7 @@ export const LiveSessionScreen = ({
               onClick={handleTogglePlay}
               disabled={!currentSong || !activeSession}
               color="primary"
-              aria-label={isPlaying ? 'Pause' : 'Play'}
+              aria-label={isPlaying ? 'Pausar' : 'Tocar'}
             >
               <IonIcon
                 slot="icon-only"
@@ -391,7 +391,7 @@ export const LiveSessionScreen = ({
               fill="clear"
               onClick={handleNext}
               disabled={currentIndex < 0 || currentIndex >= songs.length - 1 || !activeSession}
-              aria-label="Next song"
+              aria-label="Próxima música"
             >
               <IonIcon slot="icon-only" icon={playSkipForward} style={{ fontSize: 28 }} />
             </IonButton>
@@ -401,19 +401,19 @@ export const LiveSessionScreen = ({
               color="success"
               onClick={handleMarkPlayed}
               disabled={!currentSong || !activeSession}
-              aria-label="Mark song as played"
+              aria-label="Marcar como tocada"
             >
               <IonIcon slot="start" icon={checkmarkCircle} />
-              Done
+              Concluído
             </IonButton>
             <IonButton
               size="small"
               color="danger"
               onClick={handleEndSession}
               disabled={!activeSession}
-              aria-label="End session"
+              aria-label="Encerrar sessão"
             >
-              End
+              Encerrar
             </IonButton>
           </div>
 
@@ -424,12 +424,12 @@ export const LiveSessionScreen = ({
           >
             <IonSegmentButton value="songs">
               <IonIcon icon={musicalNotes} />
-              <IonLabel>Songs</IonLabel>
+              <IonLabel>Músicas</IonLabel>
               <IonBadge color="primary">{playedCount}/{sessionSongs.length}</IonBadge>
             </IonSegmentButton>
             <IonSegmentButton value="suggestions">
               <IonIcon icon={bulb} />
-              <IonLabel>Suggestions</IonLabel>
+              <IonLabel>Sugestões</IonLabel>
             </IonSegmentButton>
           </IonSegment>
 
@@ -438,7 +438,7 @@ export const LiveSessionScreen = ({
             {activeTab === 'songs' ? (
               songs.length === 0 ? (
                 <IonText color="medium">
-                  <p style={{ textAlign: 'center', padding: '1rem' }}>No songs yet</p>
+                  <p style={{ textAlign: 'center', padding: '1rem' }}>Nenhuma música ainda</p>
                 </IonText>
               ) : (
                 <IonList inset style={{ margin: 0 }}>
@@ -499,9 +499,9 @@ export const LiveSessionScreen = ({
                     const sameSentiment =
                       song.sentimentId === currentSong.sentimentId
                     let reason = ''
-                    if (sameArtist) reason = 'Same artist'
-                    else if (sharedGenres > 0) reason = 'Same genre'
-                    else if (sameSentiment) reason = 'Same sentiment'
+                    if (sameArtist) reason = 'Mesmo artista'
+                    else if (sharedGenres > 0) reason = 'Mesmo gênero'
+                    else if (sameSentiment) reason = 'Mesmo sentimento'
 
                     return (
                       <IonItem
@@ -526,8 +526,8 @@ export const LiveSessionScreen = ({
               <IonText color="medium">
                 <p style={{ textAlign: 'center', padding: '1rem' }}>
                   {activeSession
-                    ? 'Select a song to see suggestions'
-                    : 'Start a session to get suggestions'}
+                    ? 'Selecione uma música para ver sugestões'
+                    : 'Inicie uma sessão para ver sugestões'}
                 </p>
               </IonText>
             )}

@@ -34,13 +34,13 @@ export const authService = {
 
   updatePassword(newPassword: string) {
     const user = auth.currentUser
-    if (!user) throw new Error('No authenticated user')
+    if (!user) throw new Error('Nenhum usuário autenticado')
     return updatePassword(user, newPassword)
   },
 
   updateEmail(newEmail: string) {
     const user = auth.currentUser
-    if (!user) throw new Error('No authenticated user')
+    if (!user) throw new Error('Nenhum usuário autenticado')
     return updateEmail(user, newEmail)
   },
 
@@ -50,13 +50,13 @@ export const authService = {
 
   deleteAccount() {
     const user = auth.currentUser
-    if (!user) throw new Error('No authenticated user')
+    if (!user) throw new Error('Nenhum usuário autenticado')
     return deleteUser(user)
   },
 
   sendVerification() {
     const user = auth.currentUser
-    if (!user) throw new Error('No authenticated user')
+    if (!user) throw new Error('Nenhum usuário autenticado')
     return sendEmailVerification(user)
   },
 }

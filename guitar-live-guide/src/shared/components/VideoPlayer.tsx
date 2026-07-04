@@ -16,9 +16,9 @@ interface VideoPlayerProps {
 
 const labels: Record<VideoSource, string> = {
   original: 'Original',
-  lesson: 'Lesson',
+  lesson: 'Aula',
   backingTrack: 'Backing Track',
-  improvisation: 'Improvisation',
+  improvisation: 'Improviso',
 }
 
 function extractYoutubeId(url: string): string | null {
@@ -104,7 +104,7 @@ export const VideoPlayer = ({ originalUrl, lessonUrl, backingTrackUrl, improvisa
             }}
           >
             <IonText color="medium">
-              <p style={{ textAlign: 'center' }}>No URL provided for this source</p>
+              <p style={{ textAlign: 'center' }}>Nenhuma URL fornecida para esta fonte</p>
             </IonText>
           </div>
         )}

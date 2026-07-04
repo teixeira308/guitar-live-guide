@@ -25,7 +25,7 @@ export const suggestionsService = {
 
         if (song.artist === currentSong.artist) {
           score += 3
-          reason = 'Same artist'
+          reason = 'Mesmo artista'
         }
 
         const sharedGenres = song.genreIds.filter((g) =>
@@ -33,16 +33,16 @@ export const suggestionsService = {
         ).length
         if (sharedGenres > 0) {
           score += sharedGenres * 2
-          if (!reason) reason = 'Same genre'
+          if (!reason) reason = 'Mesmo gênero'
         }
 
         if (song.sentimentId === currentSong.sentimentId) {
           score += 1
-          if (!reason) reason = 'Same sentiment'
+          if (!reason) reason = 'Mesmo sentimento'
         }
 
         if (!reason) {
-          reason = 'In your repertoire'
+          reason = 'No seu repertório'
         }
 
         return { song, reason, score }

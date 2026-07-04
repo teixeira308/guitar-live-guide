@@ -33,7 +33,7 @@ export const PlaylistPickerDialog = ({ open, onSelect, onClose }: Props) => {
       initialBreakpoint={0.5}
     >
       <div style={{ padding: '1rem' }}>
-        <h2 style={{ fontWeight: 700, marginBottom: '1rem' }}>Select a Playlist</h2>
+        <h2 style={{ fontWeight: 700, marginBottom: '1rem' }}>Selecionar uma Playlist</h2>
         {loading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: '2rem' }}>
             <IonSpinner />
@@ -43,14 +43,14 @@ export const PlaylistPickerDialog = ({ open, onSelect, onClose }: Props) => {
             <IonItem button onClick={() => onSelect(undefined)}>
               <IonIcon slot="start" icon={musicalNotes} />
               <IonLabel>
-                <h2>All Songs</h2>
-                <p>Use all songs without a playlist</p>
+                <h2>Todas as Músicas</h2>
+                <p>Usar todas as músicas sem playlist</p>
               </IonLabel>
             </IonItem>
             {items.length === 0 && (
               <IonItem disabled>
                 <IonLabel>
-                  <p>No playlists yet</p>
+                  <p>Nenhuma playlist ainda</p>
                 </IonLabel>
               </IonItem>
             )}

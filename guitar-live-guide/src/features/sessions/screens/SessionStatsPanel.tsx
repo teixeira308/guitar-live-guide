@@ -21,26 +21,26 @@ export const SessionStatsPanel = ({
   return (
     <IonCard>
       <IonCardHeader>
-        <IonCardTitle>Session Stats</IonCardTitle>
+        <IonCardTitle>Estatísticas da Sessão</IonCardTitle>
       </IonCardHeader>
       <IonCardContent>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <IonIcon icon={time} color="medium" />
             <IonText color="medium">
-              <span>Time: <strong>{formatTime(elapsedSeconds)}</strong></span>
+              <span>Tempo: <strong>{formatTime(elapsedSeconds)}</strong></span>
             </IonText>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <IonIcon icon={playCircle} color="medium" />
             <IonText color="medium">
-              <span>Played: <strong>{songsPlayed}</strong></span>
+              <span>Tocadas: <strong>{songsPlayed}</strong></span>
             </IonText>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <IonIcon icon={speedometer} color="medium" />
             <IonText color="medium">
-              <span>Avg: <strong>{formatTime(averageTimePerSong)}</strong></span>
+              <span>Média: <strong>{formatTime(averageTimePerSong)}</strong></span>
             </IonText>
           </div>
         </div>

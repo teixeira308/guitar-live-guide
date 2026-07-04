@@ -7,7 +7,6 @@ import {
   IonText,
   IonItem,
   IonList,
-  IonLabel,
 } from '@ionic/react'
 import { authService } from '../services/authService'
 
@@ -22,7 +21,7 @@ export const LoginScreen = () => {
     try {
       await authService.login(email, password)
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Authentication failed')
+      setError(err instanceof Error ? err.message : 'Falha na autenticação')
     }
   }
 
@@ -37,15 +36,16 @@ export const LoginScreen = () => {
               style={{ maxWidth: 260, marginBottom: '1rem' }}
             />
             <IonText color="primary">
-              <h1 style={{ fontWeight: 700, fontSize: '1.5rem' }}>Sign In</h1>
+              <h1 style={{ fontWeight: 700, fontSize: '1.5rem' }}>Entrar</h1>
             </IonText>
           </div>
 
           <form onSubmit={handleSubmit}>
             <IonList inset>
               <IonItem>
-                <IonLabel position="floating">Email</IonLabel>
                 <IonInput
+                  label="E-mail"
+                  labelPlacement="floating"
                   type="email"
                   value={email}
                   onIonInput={(e) => setEmail(String(e.detail.value))}
@@ -53,8 +53,9 @@ export const LoginScreen = () => {
                 />
               </IonItem>
               <IonItem>
-                <IonLabel position="floating">Password</IonLabel>
                 <IonInput
+                  label="Senha"
+                  labelPlacement="floating"
                   type="password"
                   value={password}
                   onIonInput={(e) => setPassword(String(e.detail.value))}
@@ -71,7 +72,7 @@ export const LoginScreen = () => {
 
             <div style={{ padding: '1rem' }}>
               <IonButton type="submit" expand="block" size="large">
-                Sign In
+                Entrar
               </IonButton>
             </div>
           </form>

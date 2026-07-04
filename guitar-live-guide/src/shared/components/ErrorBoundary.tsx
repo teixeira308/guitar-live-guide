@@ -39,15 +39,15 @@ export class ErrorBoundary extends Component<Props, State> {
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100%', textAlign: 'center', gap: '1rem' }}>
               <IonIcon icon={alertCircle} color="danger" style={{ fontSize: 56 }} />
               <IonText color="danger">
-                <h2 style={{ fontWeight: 700 }}>Something went wrong</h2>
+                <h2 style={{ fontWeight: 700 }}>Algo deu errado</h2>
               </IonText>
               <IonText color="medium">
                 <p style={{ maxWidth: 360 }}>
-                  {this.state.error?.message || 'An unexpected error occurred'}
+                  {this.state.error?.message || 'Ocorreu um erro inesperado'}
                 </p>
               </IonText>
               <IonButton size="large" onClick={() => window.location.reload()}>
-                Reload
+                Recarregar
               </IonButton>
             </div>
           </IonContent>

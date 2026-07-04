@@ -12,8 +12,8 @@ export default defineConfig({
         name: 'Perfos',
         short_name: 'Perfos',
         description: 'Live repertoire guide for guitarists',
-        theme_color: '#050511',
-        background_color: '#050511',
+        theme_color: '#000007',
+        background_color: '#000007',
         display: 'standalone',
         icons: [
           {

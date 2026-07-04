@@ -34,7 +34,7 @@ export const SongSearchBar = ({ onFilter }: SongSearchBarProps) => {
     <IonSearchbar
       value={query}
       onIonInput={(e) => setQuery(String(e.detail.value))}
-      placeholder="Search songs or artists..."
+      placeholder="Buscar músicas ou artistas..."
       animated
     />
   )

@@ -39,7 +39,7 @@ export const SongLibraryScreen = ({ onAddSong, onEditSong }: Props) => {
   }, [dispatch])
 
   const handleDelete = (id: string, name: string) => {
-    if (window.confirm(`Delete "${name}"?`)) {
+    if (window.confirm(`Excluir "${name}"?`)) {
       dispatch(deleteSong(id))
     }
   }
@@ -70,12 +70,12 @@ export const SongLibraryScreen = ({ onAddSong, onEditSong }: Props) => {
           </div>
         ) : error ? (
           <IonText color="danger">
-            <p style={{ textAlign: 'center', padding: '2rem' }}>Error: {error}</p>
+            <p style={{ textAlign: 'center', padding: '2rem' }}>Erro: {error}</p>
           </IonText>
         ) : displayItems.length === 0 ? (
           <IonText color="medium">
             <p style={{ textAlign: 'center', padding: '2rem' }}>
-              {filteredIds ? 'No songs match your search.' : 'No songs yet. Add your first song!'}
+              {filteredIds ? 'Nenhuma música corresponde à sua busca.' : 'Nenhuma música ainda. Adicione sua primeira música!'}
             </p>
           </IonText>
         ) : (
@@ -100,7 +100,7 @@ export const SongLibraryScreen = ({ onAddSong, onEditSong }: Props) => {
         )}
 
         <IonFab vertical="bottom" horizontal="end" slot="fixed" style={{ bottom: 'calc(56px + env(safe-area-inset-bottom, 0px) + 16px)' }}>
-          <IonFabButton onClick={onAddSong} aria-label="Add new song">
+          <IonFabButton onClick={onAddSong} aria-label="Adicionar nova música">
             <IonIcon icon={add} />
           </IonFabButton>
         </IonFab>

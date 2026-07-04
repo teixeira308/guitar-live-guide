@@ -68,13 +68,13 @@ export const PlaylistManagerScreen = ({ onEditPlaylist }: Props) => {
           <IonInput
             value={newName}
             onIonInput={(e) => setNewName(String(e.detail.value))}
-            placeholder="New playlist name"
+            placeholder="Nome da nova playlist"
             fill="outline"
             style={{ flex: 1 }}
           />
-          <IonButton onClick={handleCreate} aria-label="Create playlist">
+          <IonButton onClick={handleCreate} aria-label="Criar playlist">
             <IonIcon slot="start" icon={add} />
-            Create
+            Criar
           </IonButton>
         </div>
 
@@ -84,12 +84,12 @@ export const PlaylistManagerScreen = ({ onEditPlaylist }: Props) => {
           </div>
         ) : error ? (
           <IonText color="danger">
-            <p style={{ textAlign: 'center', padding: '2rem' }}>Error: {error}</p>
+            <p style={{ textAlign: 'center', padding: '2rem' }}>Erro: {error}</p>
           </IonText>
         ) : items.length === 0 ? (
           <IonText color="medium">
             <p style={{ textAlign: 'center', padding: '2rem' }}>
-              No playlists yet. Create one to start.
+              Nenhuma playlist ainda. Crie uma para começar.
             </p>
           </IonText>
         ) : (
@@ -108,7 +108,7 @@ export const PlaylistManagerScreen = ({ onEditPlaylist }: Props) => {
                 <IonItem button onClick={() => onEditPlaylist(p.id)}>
                   <IonLabel>
                     <h2>{p.name}</h2>
-                    <p>{p.songCount} songs</p>
+                    <p>{p.songCount} músicas</p>
                   </IonLabel>
                   <IonButton
                     slot="end"

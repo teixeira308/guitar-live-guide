@@ -24,7 +24,7 @@ export const useAuth = () => useContext(AuthContext)
 async function checkFirebaseConnectivity(): Promise<string | null> {
   try {
     const apiKey = import.meta.env.VITE_FIREBASE_API_KEY
-    if (!apiKey) return 'VITE_FIREBASE_API_KEY is not set in .env'
+    if (!apiKey) return 'VITE_FIREBASE_API_KEY não está definida no .env'
 
     const resp = await fetch(
       `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${apiKey}`,
@@ -36,11 +36,11 @@ async function checkFirebaseConnectivity(): Promise<string | null> {
       if (data.error?.message === 'EMAIL_EXISTS' || data.error?.message === 'MISSING_EMAIL') {
         return null
       }
-      return `Firebase returned: ${data.error?.message || resp.status}`
+      return `Firebase retornou: ${data.error?.message || resp.status}`
     }
-    return `HTTP ${resp.status} — Firebase unreachable`
+    return `HTTP ${resp.status} — Firebase inacessível`
   } catch (err) {
-    return `Network error: ${err instanceof Error ? err.message : 'unknown'}`
+    return `Erro de rede: ${err instanceof Error ? err.message : 'desconhecido'}`
   }
 }
 
@@ -67,9 +67,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setError(connectivityError)
       } else {
         setError(
-          'Firebase is reachable but Auth is not responding. ' +
-          'Make sure "Authentication > Sign-in method > Email/Password" is ENABLED ' +
-          'in your Firebase Console (https://console.firebase.google.com).'
+          'Firebase está acessível mas o Auth não está respondendo. ' +
+          'Verifique se "Authentication > Sign-in method > Email/Password" está ATIVADO ' +
+          'no seu Firebase Console (https://console.firebase.google.com).'
         )
       }
       setLoading(false)
@@ -88,31 +88,31 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           <div style={{ maxWidth: 480, margin: '0 auto', textAlign: 'center', paddingTop: '4rem' }}>
             <IonIcon icon={alertCircle} color="danger" style={{ fontSize: 48, marginBottom: '1rem' }} />
             <IonText color="danger">
-              <h2 style={{ fontWeight: 700 }}>Connection Error</h2>
+              <h2 style={{ fontWeight: 700 }}>Erro de Conexão</h2>
             </IonText>
             <IonText color="medium">
               <p>{error}</p>
             </IonText>
             <IonText color="medium">
               <p style={{ fontSize: '0.8rem' }}>
-                Open the <strong>Firebase Console</strong> and verify:
+                Abra o <strong>Firebase Console</strong> e verifique:
               </p>
             </IonText>
             <ul style={{ textAlign: 'left', color: 'var(--ion-color-medium)', fontSize: '0.8rem' }}>
-              <li>Authentication is enabled (Email/Password sign-in)</li>
-              <li>The API key is not restricted (or allows this app)</li>
-              <li>Firebase project is not in a broken state</li>
+              <li>O login por Email/Senha está ativado</li>
+              <li>A chave da API não está restrita (ou permite este app)</li>
+              <li>O projeto Firebase não está em estado quebrado</li>
             </ul>
             <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}>
               <IonButton expand="block" onClick={() => window.location.reload()}>
-                Retry
+                Tentar Novamente
               </IonButton>
               <IonButton expand="block" fill="outline" onClick={() => {
                 setError(null)
                 setLoading(false)
                 setUser(null)
               }}>
-                Continue
+                Continuar
               </IonButton>
             </div>
           </div>

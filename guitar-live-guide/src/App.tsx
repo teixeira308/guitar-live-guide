@@ -26,8 +26,8 @@ type AppView = 'dashboard' | 'playlists' | 'session' | 'library'
 type SubView = 'none' | 'songForm' | 'playlistEditor'
 
 const tabItems = [
-  { key: 'dashboard', icon: home, label: 'Home' },
-  { key: 'library', icon: library, label: 'Library' },
+  { key: 'dashboard', icon: home, label: 'Início' },
+  { key: 'library', icon: library, label: 'Biblioteca' },
   { key: 'playlists', icon: list, label: 'Playlists' },
 ] as const
 
@@ -161,7 +161,7 @@ function App() {
     height: '100vh',
     display: 'flex',
     flexDirection: 'column',
-    background: 'var(--ion-background-color, #050511)',
+    background: 'var(--ion-background-color, #000007)',
     borderRight: '1px solid var(--ion-border-color, #1e1e2f)',
     padding: '1rem 0',
     overflowY: 'auto',

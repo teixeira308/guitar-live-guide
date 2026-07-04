@@ -22,20 +22,20 @@ export const SessionPromptOverlay = ({
     <IonModal isOpen={true} canDismiss={false}>
       <div style={{ padding: '2rem', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '1.5rem', justifyContent: 'center', minHeight: '100%' }}>
         <IonText>
-          <h2 style={{ fontWeight: 700 }}>Continue Last Session?</h2>
+          <h2 style={{ fontWeight: 700 }}>Continuar Sessão Anterior?</h2>
         </IonText>
         <IonText color="medium">
           <p>
-            You have an active session from last time.
-            Would you like to resume or start fresh?
+            Você tem uma sessão ativa da última vez.
+            Deseja continuar ou começar uma nova?
           </p>
         </IonText>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
           <IonButton expand="block" size="large" onClick={onResume}>
-            Continue
+            Continuar
           </IonButton>
           <IonButton expand="block" size="large" fill="outline" onClick={handleNewSession}>
-            New Session
+            Nova Sessão
           </IonButton>
         </div>
       </div>

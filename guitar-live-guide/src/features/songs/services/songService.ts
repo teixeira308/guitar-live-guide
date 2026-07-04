@@ -18,17 +18,17 @@ export const songService = {
   },
 
   async create(data: Omit<Song, 'userId' | 'createdAt' | 'updatedAt'>): Promise<Song> {
-    if (!data.name.trim()) throw new Error('Song name is required')
-    if (!data.artist.trim()) throw new Error('Artist name is required')
-    if (!validateYouTubeUrl(data.youtubeOriginalUrl)) throw new Error('Invalid YouTube URL for original')
-    if (!validateYouTubeUrl(data.youtubeLessonUrl)) throw new Error('Invalid YouTube URL for lesson')
-    if (!validateYouTubeUrl(data.youtubeBackingTrackUrl)) throw new Error('Invalid YouTube URL for backing track')
-    if (!validateYouTubeUrl(data.youtubeImprovisationTrackUrl)) throw new Error('Invalid YouTube URL for improvisation track')
+    if (!data.name.trim()) throw new Error('Nome da música é obrigatório')
+    if (!data.artist.trim()) throw new Error('Nome do artista é obrigatório')
+    if (!validateYouTubeUrl(data.youtubeOriginalUrl)) throw new Error('URL do YouTube inválida para original')
+    if (!validateYouTubeUrl(data.youtubeLessonUrl)) throw new Error('URL do YouTube inválida para aula')
+    if (!validateYouTubeUrl(data.youtubeBackingTrackUrl)) throw new Error('URL do YouTube inválida para backing track')
+    if (!validateYouTubeUrl(data.youtubeImprovisationTrackUrl)) throw new Error('URL do YouTube inválida para improviso')
     return songRepository.create(data)
   },
 
   async update(id: string, data: Partial<Song>): Promise<void> {
-    if (data.name !== undefined && !data.name.trim()) throw new Error('Song name cannot be empty')
+    if (data.name !== undefined && !data.name.trim()) throw new Error('Nome da música não pode estar vazio')
     return songRepository.update(id, data)
   },
 

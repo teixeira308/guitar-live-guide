@@ -18,20 +18,20 @@ export const SessionModeDialog = ({ open, onSelect, onClose }: Props) => {
       initialBreakpoint={0.25}
     >
       <div style={{ padding: '1rem' }}>
-        <h2 style={{ fontWeight: 700, marginBottom: '1rem' }}>Session Mode</h2>
+        <h2 style={{ fontWeight: 700, marginBottom: '1rem' }}>Modo de Sessão</h2>
         <IonList inset>
           <IonItem button onClick={() => onSelect('lesson')}>
             <IonIcon slot="start" icon={school} />
             <IonLabel>
-              <h2>Lesson</h2>
-              <p>Learn and practice with lesson videos</p>
+              <h2>Aula</h2>
+              <p>Aprenda e pratique com vídeos de aula</p>
             </IonLabel>
           </IonItem>
           <IonItem button onClick={() => onSelect('backingTrack')}>
             <IonIcon slot="start" icon={musicalNotes} />
             <IonLabel>
               <h2>Backing Track</h2>
-              <p>Play along with backing tracks</p>
+              <p>Toque junto com backing tracks</p>
             </IonLabel>
           </IonItem>
         </IonList>
