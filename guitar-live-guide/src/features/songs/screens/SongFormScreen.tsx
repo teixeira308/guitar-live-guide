@@ -141,7 +141,7 @@ export const SongFormScreen = ({
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonBackButton defaultHref="#" onClick={onClose} />
+            <IonBackButton defaultHref="#" onClick={onClose} text="Voltar" />
           </IonButtons>
           <IonTitle>{isEditing ? 'Editar Música' : 'Adicionar Música'}</IonTitle>
         </IonToolbar>

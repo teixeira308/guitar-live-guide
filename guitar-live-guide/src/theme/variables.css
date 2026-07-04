@@ -1,15 +1,22 @@
-html, body, #root, ion-app, ion-page,
-ion-content, ion-header, ion-footer, ion-toolbar {
+html, body, #root, ion-app, ion-page {
   background: #000007 !important;
 }
 
-ion-content {
+ion-content,
+ion-header,
+ion-footer,
+ion-toolbar,
+ion-list,
+ion-item,
+ion-modal,
+ion-router-outlet {
   --background: #000007 !important;
-}
-
-ion-modal {
-  --ion-background-color: var(--ion-color-step-100);
-  --ion-toolbar-background: var(--ion-color-step-150);
+  --ion-background: #000007 !important;
+  --ion-background-color: #000007 !important;
+  --ion-item-background: #000007 !important;
+  --ion-toolbar-background: #000007 !important;
+  --ion-tab-bar-background: #000007 !important;
+  --ion-card-background: #0a0a1a !important;
 }
 
 :root.md {

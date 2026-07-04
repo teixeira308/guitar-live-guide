@@ -306,7 +306,7 @@ export const LiveSessionScreen = ({
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            {onBack && <IonBackButton defaultHref="#" onClick={onBack} />}
+            {onBack && <IonBackButton defaultHref="#" onClick={onBack} text="Voltar" />}
           </IonButtons>
           <IonTitle style={{ fontSize: '1rem' }}>
             {currentSong?.name ?? 'Player'}

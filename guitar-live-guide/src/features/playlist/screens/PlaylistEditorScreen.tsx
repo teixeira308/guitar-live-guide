@@ -100,7 +100,7 @@ export const PlaylistEditorScreen = ({ playlistId, onBack }: Props) => {
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonBackButton defaultHref="#" onClick={onBack} />
+            <IonBackButton defaultHref="#" onClick={onBack} text="Voltar" />
           </IonButtons>
           <IonTitle>{playlist?.name ?? 'Playlist'}</IonTitle>
           <IonButtons slot="end">
