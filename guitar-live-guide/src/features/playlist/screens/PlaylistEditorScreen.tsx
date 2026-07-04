@@ -24,7 +24,7 @@ import {
   IonItemDivider,
   IonSearchbar,
 } from '@ionic/react'
-import { add, trash, albums, musicalNotes, people, key } from 'ionicons/icons'
+import { add, trash, flame, musicalNote, people, key } from 'ionicons/icons'
 import { useAppDispatch, useAppSelector } from '../../../app/hooks'
 import { fetchPlaylists } from '../store/playlistSlice'
 import { fetchSongs } from '../../songs/store/songsSlice'
