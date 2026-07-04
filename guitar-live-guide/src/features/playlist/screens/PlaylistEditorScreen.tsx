@@ -29,6 +29,7 @@ import { useAppDispatch, useAppSelector } from '../../../app/hooks'
 import { fetchPlaylists } from '../store/playlistSlice'
 import { fetchSongs } from '../../songs/store/songsSlice'
 import { playlistService } from '../services/playlistService'
+import { useMediaQuery } from '../../../shared/hooks/useMediaQuery'
 import type { Song } from '../../../shared/models/song'
 import type { PlaylistSong } from '../../../shared/models/playlistSong'
 
@@ -47,6 +48,7 @@ export const PlaylistEditorScreen = ({ playlistId, onBack }: Props) => {
   const [loading, setLoading] = useState(true)
   const [groupBy, setGroupBy] = useState<'none' | 'artist' | 'difficulty' | 'key'>('none')
   const [searchQuery, setSearchQuery] = useState('')
+  const isDesktop = useMediaQuery('(min-width: 768px)')
 
   const filteredPlaylistSongs = useMemo(() => {
     if (!searchQuery.trim()) return playlistSongs
@@ -164,7 +166,7 @@ export const PlaylistEditorScreen = ({ playlistId, onBack }: Props) => {
             </p>
           </IonText>
         ) : (
-          <>
+          <div style={isDesktop ? { maxWidth: 720, margin: '0 auto', width: '100%' } : undefined}>
             <IonSearchbar
               value={searchQuery}
               onIonInput={(e) => setSearchQuery(String(e.detail.value))}
@@ -247,7 +249,7 @@ export const PlaylistEditorScreen = ({ playlistId, onBack }: Props) => {
                 )}
               </IonList>
             )}
-          </>
+          </div>
         )}
 
         <IonModal
