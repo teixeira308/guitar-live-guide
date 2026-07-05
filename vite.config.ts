@@ -7,7 +7,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['logo-azul-sem-nome.png', 'logo-e-nome.png', 'logo-azul-com-frase.png', 'somente-nome.png'],
+      includeAssets: ['icon-192.png', 'icon-512.png', 'logo-azul-sem-nome.png', 'logo-e-nome.png', 'logo-azul-com-frase.png', 'somente-nome.png'],
       manifest: {
         name: 'Perfos',
         short_name: 'Perfos',
@@ -17,12 +17,12 @@ export default defineConfig({
         display: 'standalone',
         icons: [
           {
-            src: 'logo-azul-sem-nome.png',
+            src: 'icon-192.png',
             sizes: '192x192',
             type: 'image/png',
           },
           {
-            src: 'logo-azul-sem-nome.png',
+            src: 'icon-512.png',
             sizes: '512x512',
             type: 'image/png',
           },
