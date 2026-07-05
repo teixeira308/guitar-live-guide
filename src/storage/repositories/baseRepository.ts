@@ -1,5 +1,4 @@
 import {
-  type DocumentData,
   type FirestoreError,
   type QueryConstraint,
   type Unsubscribe,

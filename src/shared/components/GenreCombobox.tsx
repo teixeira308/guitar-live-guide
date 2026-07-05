@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react'
-import { IonItem, IonInput, IonLabel, IonIcon, IonText } from '@ionic/react'
+import { IonItem, IonInput, IonIcon, IonText } from '@ionic/react'
 import { add } from 'ionicons/icons'
 import type { Genre } from '../models/genre'
 

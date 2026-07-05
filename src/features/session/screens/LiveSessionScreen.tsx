@@ -42,7 +42,6 @@ import {
   endSession,
 } from '../store/sessionSlice'
 import type { Song } from '../../../shared/models/song'
-import type { PlaylistSong } from '../../../shared/models/playlistSong'
 import type { SessionMode } from './SessionModeDialog'
 import type { VideoSource } from '../../../shared/components/VideoPlayer'
 import { SessionSummaryScreen } from './SessionSummaryScreen'

@@ -6,7 +6,6 @@ import {
   IonTitle,
   IonContent,
   IonButtons,
-  IonBackButton,
   IonList,
   IonItem,
   IonLabel,
@@ -29,7 +28,7 @@ import {
   IonReorder,
   useIonAlert,
 } from '@ionic/react'
-import { add, trash, flame, musicalNote, people, key, reorderThree } from 'ionicons/icons'
+import { add, trash, flame, musicalNote, people } from 'ionicons/icons'
 import { useAppDispatch, useAppSelector } from '../../../app/hooks'
 import { fetchPlaylists } from '../store/playlistSlice'
 import { fetchSongs } from '../../songs/store/songsSlice'

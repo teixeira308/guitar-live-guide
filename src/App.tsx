@@ -1,9 +1,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import {
   IonIcon,
-  IonButton,
   IonLabel,
-  IonText,
 } from '@ionic/react'
 import { home, library, list, settings } from 'ionicons/icons'
 import { useAuth } from './features/auth/AuthProvider'
@@ -165,8 +163,6 @@ function App() {
 
   const isTabView = view === 'dashboard' || view === 'library' || view === 'playlists' || view === 'settings'
   if (!isTabView) return null
-
-  const activeTab = view as typeof tabItems[number]['key']
 
   const sidebarStyle: React.CSSProperties = {
     width: SIDEBAR_WIDTH,

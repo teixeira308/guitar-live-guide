@@ -6,7 +6,6 @@ import {
   IonTitle,
   IonContent,
   IonButtons,
-  IonBackButton,
   IonList,
   IonItem,
   IonInput,
@@ -19,13 +18,12 @@ import {
   IonText,
   IonSpinner,
 } from '@ionic/react'
-import { checkmark, musicalNotes, list, guitar, school, flame } from 'ionicons/icons'
+import { checkmark, musicalNotes, list, musicalNote, school, flame } from 'ionicons/icons'
 import { useAppDispatch, useAppSelector } from '../../../app/hooks'
 import { createPlaylistThunk, updatePlaylistThunk } from '../store/playlistSlice'
 import { fetchGenres, createGenre } from '../../genres/store/genreSlice'
 import { GenreCombobox } from '../../../shared/components/GenreCombobox'
 import type { PlaylistType } from '../../../shared/models/playlist'
-import { PLAYLIST_TYPE_LABELS, PLAYLIST_TYPE_DESCRIPTIONS } from '../../../shared/models/playlist'
 import type { Genre } from '../../../shared/models/genre'
 
 interface Props {
@@ -90,7 +88,7 @@ export const PlaylistFormScreen = ({ playlistId, onClose }: Props) => {
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonBackButton defaultHref="#" onClick={onClose} text="Voltar" />
+            <IonButton onClick={onClose} fill="clear">Voltar</IonButton>
           </IonButtons>
           <IonTitle>{isEditing ? 'Editar Playlist' : 'Nova Playlist'}</IonTitle>
         </IonToolbar>
