@@ -5,13 +5,15 @@ import {
   IonLabel,
   IonText,
 } from '@ionic/react'
-import { home, library, list } from 'ionicons/icons'
+import { home, library, list, settings } from 'ionicons/icons'
 import { useAuth } from './features/auth/AuthProvider'
 import { LoginScreen } from './features/auth/screens/LoginScreen'
 import { DashboardScreen } from './features/auth/screens/DashboardScreen'
+import { SettingsScreen } from './features/auth/screens/SettingsScreen'
 import { LiveSessionScreen } from './features/session/screens/LiveSessionScreen'
 import { SessionPromptOverlay } from './features/session/screens/SessionPromptOverlay'
 import { PlaylistManagerScreen } from './features/playlist/screens/PlaylistManagerScreen'
+import { PlaylistFormScreen } from './features/playlist/screens/PlaylistFormScreen'
 import { PlaylistPickerDialog } from './features/playlist/screens/PlaylistPickerDialog'
 import { PlaylistEditorScreen } from './features/playlist/screens/PlaylistEditorScreen'
 import { SongLibraryScreen } from './features/songs/screens/SongLibraryScreen'
@@ -22,12 +24,12 @@ import { SessionModeDialog } from './features/session/screens/SessionModeDialog'
 import { useMediaQuery } from './shared/hooks/useMediaQuery'
 import type { SessionMode } from './features/session/screens/SessionModeDialog'
 
-type AppView = 'dashboard' | 'playlists' | 'session' | 'library'
-type SubView = 'none' | 'songForm' | 'playlistEditor'
+type AppView = 'dashboard' | 'playlists' | 'session' | 'library' | 'settings'
+type SubView = 'none' | 'songForm' | 'playlistEditor' | 'playlistForm'
 
 const tabItems = [
   { key: 'dashboard', icon: home, label: 'Início' },
-  { key: 'library', icon: library, label: 'Biblioteca' },
+  { key: 'library', icon: library, label: 'Músicas' },
   { key: 'playlists', icon: list, label: 'Playlists' },
 ] as const
 
@@ -135,6 +137,19 @@ function App() {
     )
   }
 
+  // Full screen: playlist form (no sidebar)
+  if (subView === 'playlistForm') {
+    return (
+      <PlaylistFormScreen
+        playlistId={subData}
+        onClose={() => {
+          setSubView('none')
+          setSubData(undefined)
+        }}
+      />
+    )
+  }
+
   // Full screen: playlist editor (no sidebar)
   if (subView === 'playlistEditor' && subData) {
     return (
@@ -148,7 +163,7 @@ function App() {
     )
   }
 
-  const isTabView = view === 'dashboard' || view === 'library' || view === 'playlists'
+  const isTabView = view === 'dashboard' || view === 'library' || view === 'playlists' || view === 'settings'
   if (!isTabView) return null
 
   const activeTab = view as typeof tabItems[number]['key']
@@ -197,24 +212,25 @@ function App() {
           )
         }
         return (
-          <IonButton
+          <div
             key={tab.key}
-            fill="clear"
             style={{
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              gap: 2,
-              height: 44,
+              justifyContent: 'center',
+              gap: 4,
+              height: 56,
               minWidth: 64,
               opacity: isActive ? 1 : 0.5,
+              cursor: 'pointer',
+              color: isActive ? 'var(--ion-color-primary, #f9c41b)' : 'var(--ion-color-medium, #6b7280)',
             }}
-            color={isActive ? 'primary' : 'medium'}
             onClick={() => navigate(tab.key)}
           >
             <IonIcon icon={tab.icon} style={{ fontSize: 22 }} />
-            <IonLabel style={{ fontSize: 11, marginTop: 2 }}>{tab.label}</IonLabel>
-          </IonButton>
+            <IonLabel style={{ fontSize: 11, cursor: 'pointer' }}>{tab.label}</IonLabel>
+          </div>
         )
       })}
     </>
@@ -261,9 +277,18 @@ function App() {
         {isDesktop && (
           <aside style={sidebarStyle}>
             <div style={{ padding: '0 24px 1.5rem' }}>
-              <img src="/logo-azul-sem-nome.png" alt="Perfos" style={{ width: '100%', maxWidth: 140, display: 'block', borderRadius: 12 }} />
+              <img src="/logo-vazado.png" alt="Perfos" style={{ width: '100%', maxWidth: 200, display: 'block', borderRadius: 12 }} />
             </div>
             <nav style={{ flex: 1 }}>{renderNav(true)}</nav>
+            <div style={{ borderTop: '1px solid var(--ion-border-color, #1e1e2f)', padding: '0.5rem 0' }}>
+              <div
+                style={navItemStyle(view === 'settings')}
+                onClick={() => navigate('settings')}
+              >
+                <IonIcon icon={settings} style={{ fontSize: 22, flexShrink: 0 }} />
+                <IonLabel style={{ fontSize: 14, cursor: 'pointer' }}>Ajustes</IonLabel>
+              </div>
+            </div>
           </aside>
         )}
 
@@ -295,8 +320,17 @@ function App() {
                 setSubView('playlistEditor')
                 setSubData(playlistId)
               }}
+              onEditPlaylistMetadata={(playlistId) => {
+                setSubView('playlistForm')
+                setSubData(playlistId)
+              }}
+              onAddPlaylist={() => {
+                setSubView('playlistForm')
+                setSubData(undefined)
+              }}
             />
           )}
+          {view === 'settings' && <SettingsScreen />}
         </main>
       </div>
 
@@ -305,7 +339,27 @@ function App() {
           <style>{`
             ion-content { --padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px) + 8px); }
           `}</style>
-          <div style={mobileFooterStyle}>{renderNav(false)}</div>
+          <div style={mobileFooterStyle}>
+            {renderNav(false)}
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 4,
+                height: 56,
+                minWidth: 64,
+                opacity: view === 'settings' ? 1 : 0.5,
+                cursor: 'pointer',
+                color: view === 'settings' ? 'var(--ion-color-primary, #f9c41b)' : 'var(--ion-color-medium, #6b7280)',
+              }}
+              onClick={() => navigate('settings')}
+            >
+              <IonIcon icon={settings} style={{ fontSize: 22 }} />
+              <IonLabel style={{ fontSize: 11, cursor: 'pointer' }}>Ajustes</IonLabel>
+            </div>
+          </div>
         </>
       )}
 

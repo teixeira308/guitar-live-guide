@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   IonPage,
   IonContent,
   IonList,
   IonItem,
   IonLabel,
+  IonBadge,
   IonButton,
   IonIcon,
-  IonInput,
   IonText,
   IonSpinner,
   IonItemSliding,
@@ -15,33 +15,55 @@ import {
   IonItemOption,
   IonRefresher,
   IonRefresherContent,
+  IonFab,
+  IonFabButton,
+  IonSearchbar,
+  useIonAlert,
 } from '@ionic/react'
 import { add, create, trash, play } from 'ionicons/icons'
 import { useAppDispatch, useAppSelector } from '../../../app/hooks'
-import { fetchPlaylists, createPlaylistThunk, deletePlaylistThunk } from '../store/playlistSlice'
+import { fetchPlaylists, deletePlaylistThunk } from '../store/playlistSlice'
+import { fetchGenres } from '../../genres/store/genreSlice'
+import { formatDuration } from '../../../shared/utils/formatDuration'
 import { LiveSessionScreen } from '../../session/screens/LiveSessionScreen'
+import { PLAYLIST_TYPE_LABELS } from '../../../shared/models/playlist'
+import type { PlaylistType } from '../../../shared/models/playlist'
 
 interface Props {
   onBack: () => void
   onEditPlaylist: (playlistId: string) => void
+  onEditPlaylistMetadata: (playlistId: string) => void
+  onAddPlaylist: () => void
 }
 
-export const PlaylistManagerScreen = ({ onEditPlaylist }: Props) => {
+const typeBadgeColor = (type: PlaylistType) => {
+  switch (type) {
+    case 'setlist': return 'tertiary'
+    case 'rehearsal': return 'secondary'
+    case 'study': return 'warning'
+    case 'warmup': return 'danger'
+    default: return 'primary'
+  }
+}
+
+export const PlaylistManagerScreen = ({ onEditPlaylist, onAddPlaylist, onEditPlaylistMetadata }: Props) => {
   const dispatch = useAppDispatch()
+  const [presentAlert] = useIonAlert()
   const { items, loading, error } = useAppSelector((s) => s.playlists)
-  const [newName, setNewName] = useState('')
+  const { items: genres } = useAppSelector((s) => s.genres)
   const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [searchQuery, setSearchQuery] = useState('')
+
+  const filteredItems = useMemo(() => {
+    if (!searchQuery.trim()) return items
+    const lower = searchQuery.toLowerCase()
+    return items.filter((p) => p.name.toLowerCase().includes(lower))
+  }, [items, searchQuery])
 
   useEffect(() => {
     dispatch(fetchPlaylists())
+    dispatch(fetchGenres())
   }, [dispatch])
-
-  const handleCreate = () => {
-    if (newName.trim()) {
-      dispatch(createPlaylistThunk(newName.trim()))
-      setNewName('')
-    }
-  }
 
   const handleRefresh = async (e: CustomEvent) => {
     await dispatch(fetchPlaylists())
@@ -64,20 +86,6 @@ export const PlaylistManagerScreen = ({ onEditPlaylist }: Props) => {
           <IonRefresherContent />
         </IonRefresher>
 
-        <div style={{ padding: '1rem', display: 'flex', gap: '0.5rem' }}>
-          <IonInput
-            value={newName}
-            onIonInput={(e) => setNewName(String(e.detail.value))}
-            placeholder="Nome da nova playlist"
-            fill="outline"
-            style={{ flex: 1 }}
-          />
-          <IonButton onClick={handleCreate} aria-label="Criar playlist">
-            <IonIcon slot="start" icon={add} />
-            Criar
-          </IonButton>
-        </div>
-
         {loading && items.length === 0 ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: '2rem' }}>
             <IonSpinner />
@@ -93,13 +101,40 @@ export const PlaylistManagerScreen = ({ onEditPlaylist }: Props) => {
             </p>
           </IonText>
         ) : (
-          <IonList inset>
-            {items.map((p) => (
+          <>
+            <IonSearchbar
+              value={searchQuery}
+              onIonInput={(e) => setSearchQuery(String(e.detail.value))}
+              placeholder="Buscar playlist..."
+              animated
+            />
+            {filteredItems.length === 0 ? (
+              <IonText color="medium">
+                <p style={{ textAlign: 'center', padding: '2rem' }}>
+                  Nenhuma playlist encontrada.
+                </p>
+              </IonText>
+            ) : (
+            <IonList inset>
+            {filteredItems.map((p) => (
               <IonItemSliding key={p.id}>
                 <IonItemOptions side="end">
                   <IonItemOption
                     color="danger"
-                    onClick={() => dispatch(deletePlaylistThunk(p.id))}
+                    onClick={() => {
+                      presentAlert({
+                        header: 'Excluir playlist',
+                        message: `Tem certeza que deseja excluir "${p.name}"?`,
+                        buttons: [
+                          { text: 'Cancelar', role: 'cancel' },
+                          {
+                            text: 'Excluir',
+                            role: 'destructive',
+                            handler: () => dispatch(deletePlaylistThunk(p.id)),
+                          },
+                        ],
+                      })
+                    }}
                     aria-label={`Delete ${p.name}`}
                   >
                     <IonIcon slot="icon-only" icon={trash} />
@@ -108,7 +143,24 @@ export const PlaylistManagerScreen = ({ onEditPlaylist }: Props) => {
                 <IonItem button onClick={() => onEditPlaylist(p.id)}>
                   <IonLabel>
                     <h2>{p.name}</h2>
-                    <p>{p.songCount} músicas</p>
+                    <p>
+                      <IonBadge color={typeBadgeColor(p.type)} style={{ marginRight: 4 }}>
+                        {PLAYLIST_TYPE_LABELS[p.type]}
+                      </IonBadge>
+                      {p.songCount} músicas · {formatDuration(p.estimatedDuration)}
+                    </p>
+                    {p.description && (
+                      <p style={{ fontSize: '0.8rem', color: 'var(--ion-color-medium)' }}>{p.description}</p>
+                    )}
+                    {p.genreId && (
+                      <p style={{ fontSize: '0.75rem' }}>
+                        {genres.find((g) => g.id === p.genreId)?.name || '—'}
+                      </p>
+                    )}
+                    <p style={{ fontSize: '0.7rem', color: 'var(--ion-color-medium-tint)' }}>
+                      {p.timesPlayed > 0 && `${p.timesPlayed}x tocada`}
+                      {p.lastPerformedAt && ` · última: ${new Date(p.lastPerformedAt).toLocaleDateString()}`}
+                    </p>
                   </IonLabel>
                   <IonButton
                     slot="end"
@@ -121,12 +173,30 @@ export const PlaylistManagerScreen = ({ onEditPlaylist }: Props) => {
                   >
                     <IonIcon slot="icon-only" icon={play} color="primary" />
                   </IonButton>
-                  <IonIcon slot="end" icon={create} color="medium" />
+                  <IonButton
+                    slot="end"
+                    fill="clear"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      onEditPlaylistMetadata(p.id)
+                    }}
+                    aria-label={`Editar ${p.name}`}
+                  >
+                    <IonIcon slot="icon-only" icon={create} color="medium" />
+                  </IonButton>
                 </IonItem>
               </IonItemSliding>
             ))}
           </IonList>
+            )}
+          </>
         )}
+
+        <IonFab vertical="bottom" horizontal="end" slot="fixed" style={{ bottom: 'calc(56px + env(safe-area-inset-bottom, 0px) + 16px)' }}>
+          <IonFabButton onClick={onAddPlaylist} aria-label="Criar nova playlist">
+            <IonIcon icon={add} />
+          </IonFabButton>
+        </IonFab>
       </IonContent>
     </IonPage>
   )

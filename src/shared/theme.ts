@@ -33,7 +33,7 @@ const theme = createTheme({
     divider: '#1a1a2e',
   },
   typography: {
-    fontFamily: 'system-ui, -apple-system, sans-serif',
+    fontFamily: 'Poppins, system-ui, -apple-system, sans-serif',
     h2: {
       fontSize: '1.5rem',
       fontWeight: 700,

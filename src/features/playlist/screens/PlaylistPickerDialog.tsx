@@ -10,6 +10,7 @@ import {
 import { musicalNotes, list } from 'ionicons/icons'
 import { useAppDispatch, useAppSelector } from '../../../app/hooks'
 import { fetchPlaylists } from '../store/playlistSlice'
+import { formatDuration } from '../../../shared/utils/formatDuration'
 
 interface Props {
   open: boolean
@@ -59,7 +60,7 @@ export const PlaylistPickerDialog = ({ open, onSelect, onClose }: Props) => {
                 <IonIcon slot="start" icon={list} />
                 <IonLabel>
                   <h2>{p.name}</h2>
-                  <p>{p.songCount} songs</p>
+                  <p>{p.songCount} músicas · {formatDuration(p.estimatedDuration)}</p>
                 </IonLabel>
               </IonItem>
             ))}

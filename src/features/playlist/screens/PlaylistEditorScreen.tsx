@@ -23,8 +23,13 @@ import {
   IonSegmentButton,
   IonItemDivider,
   IonSearchbar,
+  IonFab,
+  IonFabButton,
+  IonReorderGroup,
+  IonReorder,
+  useIonAlert,
 } from '@ionic/react'
-import { add, trash, flame, musicalNote, people, key } from 'ionicons/icons'
+import { add, trash, flame, musicalNote, people, key, reorderThree } from 'ionicons/icons'
 import { useAppDispatch, useAppSelector } from '../../../app/hooks'
 import { fetchPlaylists } from '../store/playlistSlice'
 import { fetchSongs } from '../../songs/store/songsSlice'
@@ -40,12 +45,14 @@ interface Props {
 
 export const PlaylistEditorScreen = ({ playlistId, onBack }: Props) => {
   const dispatch = useAppDispatch()
+  const [presentAlert] = useIonAlert()
   const { items: playlists } = useAppSelector((s) => s.playlists)
   const { items: allSongs } = useAppSelector((s) => s.songs)
   const [playlistSongs, setPlaylistSongs] = useState<(PlaylistSong & { song?: Song })[]>([])
   const [showAddModal, setShowAddModal] = useState(false)
   const [selectedSongIds, setSelectedSongIds] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState(true)
+  const [adding, setAdding] = useState(false)
   const [groupBy, setGroupBy] = useState<'none' | 'artist' | 'difficulty' | 'key'>('none')
   const [searchQuery, setSearchQuery] = useState('')
   const isDesktop = useMediaQuery('(min-width: 768px)')
@@ -109,10 +116,23 @@ export const PlaylistEditorScreen = ({ playlistId, onBack }: Props) => {
     if (allSongs.length > 0) loadSongs()
   }, [allSongs, playlistId])
 
-  const handleRemove = async (playlistSongId: string) => {
-    await playlistService.removeSong(playlistSongId)
-    dispatch(fetchPlaylists())
-    loadSongs()
+  const confirmRemove = (playlistSongId: string, songName: string) => {
+    presentAlert({
+      header: 'Remover música',
+      message: `Remover "${songName}" da playlist?`,
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        {
+          text: 'Remover',
+          role: 'destructive',
+          handler: async () => {
+            await playlistService.removeSong(playlistSongId)
+            dispatch(fetchPlaylists())
+            loadSongs()
+          },
+        },
+      ],
+    })
   }
 
   const songsNotInPlaylist = allSongs.filter(
@@ -128,13 +148,29 @@ export const PlaylistEditorScreen = ({ playlistId, onBack }: Props) => {
     })
   }
 
+  const handleReorder = async (event: CustomEvent) => {
+    const from = event.detail.from
+    const to = event.detail.to
+    event.detail.complete()
+    if (from === to) return
+    const reordered = [...playlistSongs]
+    const [moved] = reordered.splice(from, 1)
+    reordered.splice(to, 0, moved)
+    setPlaylistSongs(reordered)
+    const updates = reordered.map((item, index) => ({ id: item.id, sortOrder: index + 1 }))
+    await playlistService.reorderSongs(updates)
+    dispatch(fetchPlaylists())
+  }
+
   const handleAddSongs = async () => {
+    setAdding(true)
     for (const songId of selectedSongIds) {
       const nextOrder = playlistSongs.length + 1
       await playlistService.addSong(playlistId, songId, nextOrder)
     }
     setSelectedSongIds(new Set())
     setShowAddModal(false)
+    setAdding(false)
     dispatch(fetchPlaylists())
     loadSongs()
   }
@@ -147,21 +183,34 @@ export const PlaylistEditorScreen = ({ playlistId, onBack }: Props) => {
             <IonBackButton defaultHref="#" onClick={onBack} text="Voltar" />
           </IonButtons>
           <IonTitle>{playlist?.name ?? 'Playlist'}</IonTitle>
-          <IonButtons slot="end">
-            <IonButton onClick={() => setShowAddModal(true)}>
-              <IonIcon slot="icon-only" icon={add} />
-            </IonButton>
-          </IonButtons>
+          <IonButtons slot="end" />
         </IonToolbar>
       </IonHeader>
       <IonContent>
         <style>{`
-          ion-content, ion-header, ion-toolbar, ion-list, ion-item, ion-item-divider, ion-item-sliding {
-            --background: #000007 !important;
-            --ion-background-color: #000007 !important;
-            --ion-item-background: #000007 !important;
-            --ion-toolbar-background: #000007 !important;
-            background: #000007 !important;
+          .playlist-song-item {
+            --padding-start: 16px;
+            --padding-end: 16px;
+            --padding-top: 12px;
+            --padding-bottom: 12px;
+            --border-radius: 12px;
+            background: #0a0a1a;
+            margin: 0 12px 8px;
+            border-radius: 12px;
+            border: 1px solid #1a1a2e;
+          }
+          .playlist-song-item:last-child {
+            margin-bottom: 0;
+          }
+          .playlist-group-header {
+            --background: transparent;
+            --padding-start: 16px;
+            --padding-end: 16px;
+            --padding-top: 8px;
+            --padding-bottom: 4px;
+            --min-height: 32px;
+            font-weight: 600;
+            color: var(--ion-color-primary, #f9c41b);
           }
         `}</style>
         {loading ? (
@@ -208,58 +257,64 @@ export const PlaylistEditorScreen = ({ playlistId, onBack }: Props) => {
                 </p>
               </IonText>
             ) : (
-              <IonList inset>
+              <div style={{ padding: '0 4px 80px' }}>
                 {groupedSongs ? (
-                  groupedSongs.map(([groupName, songs]) => (
-                    <div key={groupName}>
-                      <IonItemDivider>
+                  <IonReorderGroup disabled={groupBy !== 'none'} onIonItemReorder={handleReorder}>
+                  {groupedSongs.map(([groupName, songs]) => (
+                    <div key={groupName} style={{ marginBottom: 12 }}>
+                      <IonItemDivider className="playlist-group-header">
                         <IonLabel>{groupName}</IonLabel>
-                        <IonLabel slot="end">{songs.length} {songs.length === 1 ? 'música' : 'músicas'}</IonLabel>
+                        <IonLabel slot="end" style={{ color: 'var(--ion-color-medium)' }}>{songs.length} {songs.length === 1 ? 'música' : 'músicas'}</IonLabel>
                       </IonItemDivider>
-                      {songs.map((ps, idx) => (
+                      {songs.map((ps) => (
                         <IonItemSliding key={ps.id}>
                           <IonItemOptions side="end">
-                            <IonItemOption color="danger" onClick={() => handleRemove(ps.id)} aria-label={`Remover ${ps.song?.name ?? 'Desconhecida'}`}>
+                            <IonItemOption color="danger" onClick={() => confirmRemove(ps.id, ps.song?.name ?? 'Desconhecida')} aria-label={`Remover ${ps.song?.name ?? 'Desconhecida'}`}>
                               <IonIcon slot="icon-only" icon={trash} />
                             </IonItemOption>
                           </IonItemOptions>
-                          <IonItem>
-                            <IonLabel slot="start" style={{ flex: '0 0 2rem', textAlign: 'center', color: 'var(--ion-color-medium)' }}>
-                              <IonText color="medium">{idx + 1}</IonText>
-                            </IonLabel>
+                          <IonItem className="playlist-song-item">
                             <IonLabel>
-                              <h2>{ps.song?.name ?? 'Desconhecida'}</h2>
-                              <p>{ps.song?.artist}</p>
+                              <h2 style={{ fontWeight: 600, fontSize: '1rem', marginBottom: 2 }}>{ps.song?.name ?? 'Desconhecida'}</h2>
                             </IonLabel>
                           </IonItem>
                         </IonItemSliding>
                       ))}
                     </div>
-                  ))
+                  ))}
+                  </IonReorderGroup>
                 ) : (
-                  filteredPlaylistSongs.map((ps, idx) => (
+                  <IonReorderGroup disabled={groupBy !== 'none'} onIonItemReorder={handleReorder}>
+                  {filteredPlaylistSongs.map((ps) => (
                     <IonItemSliding key={ps.id}>
                       <IonItemOptions side="end">
-                        <IonItemOption color="danger" onClick={() => handleRemove(ps.id)} aria-label={`Remover ${ps.song?.name ?? 'Desconhecida'}`}>
+                        <IonItemOption color="danger" onClick={() => confirmRemove(ps.id, ps.song?.name ?? 'Desconhecida')} aria-label={`Remover ${ps.song?.name ?? 'Desconhecida'}`}>
                           <IonIcon slot="icon-only" icon={trash} />
                         </IonItemOption>
                       </IonItemOptions>
-                      <IonItem>
-                        <IonLabel slot="start" style={{ flex: '0 0 2rem', textAlign: 'center', color: 'var(--ion-color-medium)' }}>
-                          <IonText color="medium">{idx + 1}</IonText>
-                        </IonLabel>
+                      <IonItem className="playlist-song-item">
                         <IonLabel>
-                          <h2>{ps.song?.name ?? 'Desconhecida'}</h2>
-                          <p>{ps.song?.artist}</p>
+                          <h2 style={{ fontWeight: 600, fontSize: '1rem', marginBottom: 2 }}>{ps.song?.name ?? 'Desconhecida'}</h2>
+                          <p style={{ color: 'var(--ion-color-medium)', fontSize: '0.85rem' }}>{ps.song?.artist}</p>
                         </IonLabel>
+                        {groupBy === 'none' && (
+                          <IonReorder slot="end" />
+                        )}
                       </IonItem>
                     </IonItemSliding>
-                  ))
+                  ))}
+                  </IonReorderGroup>
                 )}
-              </IonList>
+              </div>
             )}
           </div>
         )}
+
+        <IonFab vertical="bottom" horizontal="end" slot="fixed" style={{ bottom: '16px' }}>
+          <IonFabButton onClick={() => setShowAddModal(true)} aria-label="Adicionar músicas">
+            <IonIcon icon={add} />
+          </IonFabButton>
+        </IonFab>
 
         <IonModal
           isOpen={showAddModal}
@@ -297,8 +352,9 @@ export const PlaylistEditorScreen = ({ playlistId, onBack }: Props) => {
               <IonButton
                 expand="block"
                 onClick={handleAddSongs}
-                disabled={selectedSongIds.size === 0}
+                disabled={selectedSongIds.size === 0 || adding}
               >
+                {adding ? <IonSpinner /> : null}
                 Adicionar ({selectedSongIds.size})
               </IonButton>
               <IonButton

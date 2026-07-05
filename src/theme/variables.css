@@ -53,6 +53,7 @@ ion-segment-button {
 }
 
 :root {
+  --ion-font-family: Poppins, system-ui, -apple-system, sans-serif;
   --ion-color-primary: #f9c41b;
   --ion-color-primary-rgb: 249, 196, 27;
   --ion-color-primary-contrast: #000000;

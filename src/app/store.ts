@@ -3,6 +3,7 @@ import { songsReducer } from '../features/songs/store/songsSlice'
 import { playlistReducer } from '../features/playlist/store/playlistSlice'
 import { sessionReducer } from '../features/session/store/sessionSlice'
 import { suggestionsReducer } from '../features/suggestions/store/suggestionsSlice'
+import { genreReducer } from '../features/genres/store/genreSlice'
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     playlists: playlistReducer,
     session: sessionReducer,
     suggestions: suggestionsReducer,
+    genres: genreReducer,
   },
 })
 

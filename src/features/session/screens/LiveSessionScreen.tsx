@@ -17,6 +17,7 @@ import {
   IonSegment,
   IonSegmentButton,
   IonBadge,
+  IonSpinner,
 } from '@ionic/react'
 import {
   playSkipBack,
@@ -73,6 +74,9 @@ export const LiveSessionScreen = ({
   const notesSaveRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [isPlaying, setIsPlaying] = useState(true)
   const [showSummary, setShowSummary] = useState(false)
+  const [starting, setStarting] = useState(false)
+  const [markingPlayed, setMarkingPlayed] = useState(false)
+  const [ending, setEnding] = useState(false)
   const [activeTab, setActiveTab] = useState<'songs' | 'suggestions'>('songs')
   const songTimersRef = useRef<Record<string, number>>({})
   const hasAutoSelectedRef = useRef(false)
@@ -125,8 +129,13 @@ export const LiveSessionScreen = ({
     }
   }, [activeSession?.status, dispatch])
 
-  const handleStartSession = useCallback(() => {
-    dispatch(startSession(playlistId))
+  const handleStartSession = useCallback(async () => {
+    setStarting(true)
+    await dispatch(startSession(playlistId))
+    if (playlistId) {
+      playlistService.markAsPerformed(playlistId)
+    }
+    setStarting(false)
   }, [dispatch, playlistId])
 
   const currentSong: Song | null = (() => {
@@ -173,20 +182,26 @@ export const LiveSessionScreen = ({
     [activeSession, currentSong, dispatch, recordDuration, startTimerForSong]
   )
 
-  const handleMarkPlayed = useCallback(() => {
+  const handleMarkPlayed = useCallback(async () => {
     if (!activeSession || !currentSong) return
+    setMarkingPlayed(true)
     recordDuration(currentSong.id)
-    dispatch(
+    await dispatch(
       markSongPlayed({
         sessionId: activeSession.id,
         songId: currentSong.id,
       })
     )
+    setMarkingPlayed(false)
   }, [activeSession, currentSong, dispatch, recordDuration])
 
-  const handleEndSession = useCallback(() => {
+  const handleEndSession = useCallback(async () => {
     if (currentSong) recordDuration(currentSong.id)
-    if (activeSession) dispatch(endSession(activeSession.id))
+    if (activeSession) {
+      setEnding(true)
+      await dispatch(endSession(activeSession.id))
+      setEnding(false)
+    }
     setShowSummary(true)
   }, [activeSession, currentSong, dispatch, recordDuration])
 
@@ -323,7 +338,8 @@ export const LiveSessionScreen = ({
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0.5rem' }}>
             {!activeSession && (
               <div style={{ padding: '1rem' }}>
-                <IonButton expand="block" size="large" onClick={handleStartSession}>
+                <IonButton expand="block" size="large" onClick={handleStartSession} disabled={starting}>
+                  {starting ? <IonSpinner /> : null}
                   Iniciar Sessão
                 </IonButton>
               </div>
@@ -400,19 +416,20 @@ export const LiveSessionScreen = ({
               size="small"
               color="success"
               onClick={handleMarkPlayed}
-              disabled={!currentSong || !activeSession}
+              disabled={!currentSong || !activeSession || markingPlayed}
               aria-label="Marcar como tocada"
             >
-              <IonIcon slot="start" icon={checkmarkCircle} />
+              {markingPlayed ? <IonSpinner /> : <IonIcon slot="start" icon={checkmarkCircle} />}
               Concluído
             </IonButton>
             <IonButton
               size="small"
               color="danger"
               onClick={handleEndSession}
-              disabled={!activeSession}
+              disabled={!activeSession || ending}
               aria-label="Encerrar sessão"
             >
+              {ending ? <IonSpinner /> : null}
               Encerrar
             </IonButton>
           </div>

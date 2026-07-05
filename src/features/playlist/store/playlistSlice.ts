@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { playlistService } from '../services/playlistService'
-import type { Playlist } from '../../../shared/models/playlist'
+import type { Playlist, PlaylistType } from '../../../shared/models/playlist'
 
 interface PlaylistState {
   items: Playlist[]
@@ -24,8 +24,16 @@ export const fetchPlaylists = createAsyncThunk('playlists/fetchAll', async () =>
 
 export const createPlaylistThunk = createAsyncThunk(
   'playlists/create',
-  async (name: string) => {
-    return playlistService.create(name)
+  async (data: { name: string; description?: string; genreId?: string; type: PlaylistType }) => {
+    return playlistService.create(data)
+  }
+)
+
+export const updatePlaylistThunk = createAsyncThunk(
+  'playlists/update',
+  async ({ id, data }: { id: string; data: Partial<Playlist> }) => {
+    await playlistService.update(id, data)
+    return { id, data }
   }
 )
 
@@ -62,6 +70,12 @@ const playlistSlice = createSlice({
       })
       .addCase(createPlaylistThunk.fulfilled, (state, action) => {
         state.items.push(action.payload)
+      })
+      .addCase(updatePlaylistThunk.fulfilled, (state, action) => {
+        const idx = state.items.findIndex((p) => p.id === action.payload.id)
+        if (idx !== -1) {
+          state.items[idx] = { ...state.items[idx], ...action.payload.data }
+        }
       })
       .addCase(deletePlaylistThunk.fulfilled, (state, action) => {
         state.items = state.items.filter((p) => p.id !== action.payload)

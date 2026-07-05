@@ -27,7 +27,7 @@ export const DashboardScreen = ({ onStartSession, onManagePlaylists, onSongLibra
           <IonText color="medium">
             <p style={{ maxWidth: 320, fontSize: '0.875rem' }}>
               Crie seu repertório, inicie uma sessão ao vivo e navegue pelas
-              suas músicas com vídeos do YouTube e sugestões inteligentes.
+              suas músicas com vídeos do YouTube.
             </p>
           </IonText>
 

@@ -1,4 +1,4 @@
-import { collection, getDocs, orderBy } from 'firebase/firestore'
+import { collection, getDocs, doc, setDoc } from 'firebase/firestore'
 import { db } from '../../shared/services/firebase'
 import type { Genre } from '../../shared/models/genre'
 
@@ -9,5 +9,10 @@ export const genreRepository = {
     const q = collection(db, COLLECTION)
     const snap = await getDocs(q)
     return snap.docs.map((d) => d.data() as Genre)
+  },
+
+  async create(genre: Genre): Promise<void> {
+    const ref = doc(db, COLLECTION, genre.id)
+    await setDoc(ref, genre)
   },
 }
