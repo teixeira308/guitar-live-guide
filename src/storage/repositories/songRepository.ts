@@ -27,7 +27,7 @@ export const songRepository = {
 
   async create(data: Omit<Song, 'userId' | 'createdAt' | 'updatedAt'>): Promise<Song> {
     const userId = getUserId()
-    return createDocument<Song>(COLLECTION, { ...data, userId } as Song)
+    return createDocument<Song>(COLLECTION, { ...data, userId } as unknown as Song)
   },
 
   async update(id: string, data: Partial<Song>): Promise<void> {

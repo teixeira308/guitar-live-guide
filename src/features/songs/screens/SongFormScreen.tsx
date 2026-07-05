@@ -6,21 +6,20 @@ import {
   IonToolbar,
   IonTitle,
   IonContent,
+  IonButtons,
   IonList,
   IonItem,
-  IonLabel,
   IonInput,
+  IonLabel,
   IonTextarea,
-  IonSelect,
-  IonSelectOption,
   IonButton,
-  IonButtons,
-  IonBackButton,
+  IonIcon,
   IonText,
+  IonSpinner,
   IonSegment,
   IonSegmentButton,
-  IonIcon,
-  IonSpinner,
+  IonSelect,
+  IonSelectOption,
 } from '@ionic/react'
 import { musicalNotes, checkmark, close } from 'ionicons/icons'
 import { useAppDispatch, useAppSelector } from '../../../app/hooks'
@@ -213,7 +212,7 @@ export const SongFormScreen = ({
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonBackButton defaultHref="#" onClick={onClose} text="Voltar" />
+            <IonButton onClick={onClose} fill="clear">Voltar</IonButton>
           </IonButtons>
           <IonTitle>{isEditing ? 'Editar Música' : 'Adicionar Música'}</IonTitle>
         </IonToolbar>

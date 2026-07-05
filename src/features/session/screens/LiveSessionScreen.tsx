@@ -6,10 +6,9 @@ import {
   IonTitle,
   IonContent,
   IonButtons,
-  IonBackButton,
-  IonList,
   IonItem,
   IonLabel,
+  IonList,
   IonButton,
   IonIcon,
   IonText,
@@ -320,7 +319,7 @@ export const LiveSessionScreen = ({
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            {onBack && <IonBackButton defaultHref="#" onClick={onBack} text="Voltar" />}
+            {onBack && <IonButton onClick={onBack} fill="clear">Voltar</IonButton>}
           </IonButtons>
           <IonTitle style={{ fontSize: '1rem' }}>
             {currentSong?.name ?? 'Player'}

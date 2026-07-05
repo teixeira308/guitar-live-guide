@@ -149,7 +149,7 @@ export const PlaylistFormScreen = ({ playlistId, onClose }: Props) => {
                     <IonLabel>Setlist</IonLabel>
                   </IonSegmentButton>
                   <IonSegmentButton value="rehearsal">
-                    <IonIcon icon={guitar} />
+                    <IonIcon icon={musicalNote} />
                     <IonLabel>Ensaio</IonLabel>
                   </IonSegmentButton>
                   <IonSegmentButton value="study">

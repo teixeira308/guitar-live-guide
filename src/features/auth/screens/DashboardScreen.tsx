@@ -20,9 +20,7 @@ export const DashboardScreen = ({ onStartSession, onManagePlaylists, onSongLibra
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '80%', textAlign: 'center', gap: '1rem' }}>
           <img src="/logo-e-nome.png" alt="Perfos" style={{ width: 500, marginBottom: '0.5rem', borderRadius: 12 }} />
 
-          <IonText color="medium">
-            <p>Bem-vindo ao Perfos</p>
-          </IonText>
+         
 
           <IonText color="medium">
             <p style={{ maxWidth: 320, fontSize: '0.875rem' }}>

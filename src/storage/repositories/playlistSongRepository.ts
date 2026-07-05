@@ -24,7 +24,7 @@ export const playlistSongRepository = {
 
   async create(data: Omit<PlaylistSong, 'createdAt'>): Promise<PlaylistSong> {
     const userId = getUserId()
-    return createDocument<PlaylistSong>(COLLECTION, { ...data, userId } as PlaylistSong)
+    return createDocument<PlaylistSong>(COLLECTION, { ...data, userId } as unknown as PlaylistSong)
   },
 
   async delete(id: string): Promise<void> {

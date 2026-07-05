@@ -21,7 +21,7 @@ export const sessionSongRepository = {
 
   async create(data: Omit<SessionSong, 'createdAt'>): Promise<SessionSong> {
     const userId = getUserId()
-    return createDocument<SessionSong>(COLLECTION, { ...data, userId } as SessionSong)
+    return createDocument<SessionSong>(COLLECTION, { ...data, userId } as unknown as SessionSong)
   },
 
   async update(id: string, data: Partial<SessionSong>): Promise<void> {
