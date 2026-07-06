@@ -13,7 +13,6 @@ import {
   IonIcon,
   IonText,
   IonSpinner,
-  IonModal,
   IonCheckbox,
   IonItemSliding,
   IonItemOptions,
@@ -54,6 +53,7 @@ export const PlaylistEditorScreen = ({ playlistId, onBack }: Props) => {
   const [adding, setAdding] = useState(false)
   const [groupBy, setGroupBy] = useState<'none' | 'artist' | 'difficulty' | 'key'>('none')
   const [searchQuery, setSearchQuery] = useState('')
+  const [searchAddQuery, setSearchAddQuery] = useState('')
   const isDesktop = useMediaQuery('(min-width: 768px)')
 
   const filteredPlaylistSongs = useMemo(() => {
@@ -138,6 +138,16 @@ export const PlaylistEditorScreen = ({ playlistId, onBack }: Props) => {
     (s) => !playlistSongs.some((ps) => ps.songId === s.id)
   )
 
+  const addFilteredSongs = useMemo(() => {
+    if (!searchAddQuery.trim()) return songsNotInPlaylist
+    const lower = searchAddQuery.toLowerCase()
+    return songsNotInPlaylist.filter(
+      (s) =>
+        s.name?.toLowerCase().includes(lower) ||
+        s.artist?.toLowerCase().includes(lower)
+    )
+  }, [songsNotInPlaylist, searchAddQuery])
+
   const toggleSelect = (songId: string) => {
     setSelectedSongIds((prev) => {
       const next = new Set(prev)
@@ -172,6 +182,59 @@ export const PlaylistEditorScreen = ({ playlistId, onBack }: Props) => {
     setAdding(false)
     dispatch(fetchPlaylists())
     loadSongs()
+  }
+
+  if (showAddModal) {
+    return (
+      <IonPage>
+        <IonHeader>
+          <IonToolbar>
+            <IonButtons slot="start">
+              <IonButton onClick={() => { setShowAddModal(false); setSelectedSongIds(new Set()); setSearchAddQuery(''); }} fill="clear">
+                Voltar
+              </IonButton>
+            </IonButtons>
+            <IonTitle>Adicionar Músicas</IonTitle>
+            <IonButtons slot="end">
+              <IonButton onClick={handleAddSongs} disabled={selectedSongIds.size === 0 || adding}>
+                {adding ? <IonSpinner /> : `Adicionar (${selectedSongIds.size})`}
+              </IonButton>
+            </IonButtons>
+          </IonToolbar>
+        </IonHeader>
+        <IonContent>
+          <IonSearchbar
+            value={searchAddQuery}
+            onIonInput={(e) => setSearchAddQuery(String(e.detail.value))}
+            placeholder="Buscar músicas ou artistas..."
+            animated
+          />
+          {addFilteredSongs.length === 0 ? (
+            <IonText color="medium">
+              <p style={{ textAlign: 'center', padding: '2rem' }}>
+                {searchAddQuery.trim() ? 'Nenhum resultado encontrado.' : 'Todas as músicas já estão nesta playlist.'}
+              </p>
+            </IonText>
+          ) : (
+            <IonList inset style={{ paddingBottom: '80px' }}>
+              {addFilteredSongs.map((song) => (
+                <IonItem key={song.id} onClick={() => toggleSelect(song.id)}>
+                  <IonCheckbox
+                    slot="start"
+                    checked={selectedSongIds.has(song.id)}
+                    onIonChange={() => toggleSelect(song.id)}
+                  />
+                  <IonLabel>
+                    <h2>{song.name}</h2>
+                    <p>{song.artist}</p>
+                  </IonLabel>
+                </IonItem>
+              ))}
+            </IonList>
+          )}
+        </IonContent>
+      </IonPage>
+    )
   }
 
   return (
@@ -314,61 +377,6 @@ export const PlaylistEditorScreen = ({ playlistId, onBack }: Props) => {
             <IonIcon icon={add} />
           </IonFabButton>
         </IonFab>
-
-        <IonModal
-          isOpen={showAddModal}
-          onDidDismiss={() => {
-            setShowAddModal(false)
-            setSelectedSongIds(new Set())
-          }}
-          breakpoints={[0.25, 0.5, 0.75]}
-          initialBreakpoint={0.5}
-        >
-          <div style={{ padding: '1rem' }}>
-            <h2 style={{ fontWeight: 700, marginBottom: '1rem' }}>Adicionar Músicas</h2>
-            {songsNotInPlaylist.length === 0 ? (
-              <IonText color="medium">
-                <p>Todas as músicas já estão nesta playlist.</p>
-              </IonText>
-            ) : (
-              <IonList inset>
-                {songsNotInPlaylist.map((song) => (
-                  <IonItem key={song.id} onClick={() => toggleSelect(song.id)}>
-                    <IonCheckbox
-                      slot="start"
-                      checked={selectedSongIds.has(song.id)}
-                      onIonChange={() => toggleSelect(song.id)}
-                    />
-                    <IonLabel>
-                      <h2>{song.name}</h2>
-                      <p>{song.artist}</p>
-                    </IonLabel>
-                  </IonItem>
-                ))}
-              </IonList>
-            )}
-            <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}>
-              <IonButton
-                expand="block"
-                onClick={handleAddSongs}
-                disabled={selectedSongIds.size === 0 || adding}
-              >
-                {adding ? <IonSpinner /> : null}
-                Adicionar ({selectedSongIds.size})
-              </IonButton>
-              <IonButton
-                expand="block"
-                fill="outline"
-                onClick={() => {
-                  setShowAddModal(false)
-                  setSelectedSongIds(new Set())
-                }}
-              >
-                Cancelar
-              </IonButton>
-            </div>
-          </div>
-        </IonModal>
       </IonContent>
     </IonPage>
   )

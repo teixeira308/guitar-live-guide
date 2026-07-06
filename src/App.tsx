@@ -174,7 +174,7 @@ function App() {
     flexDirection: 'column',
     background: 'var(--ion-background-color, #000007)',
     borderRight: '1px solid var(--ion-border-color, #1e1e2f)',
-    padding: '1rem 0',
+    padding: 'env(safe-area-inset-top, 0px) 0 1rem',
     overflowY: 'auto',
   }
 
@@ -241,10 +241,11 @@ function App() {
     display: 'flex',
     justifyContent: 'space-around',
     alignItems: 'center',
-    height: 56,
     background: 'var(--ion-background-color)',
     borderTop: '1px solid var(--ion-border-color)',
+    height: 'calc(56px + env(safe-area-inset-bottom, 0px))',
     paddingBottom: 'env(safe-area-inset-bottom, 0px)',
+    boxSizing: 'content-box',
   }
 
   return (
@@ -288,7 +289,7 @@ function App() {
           </aside>
         )}
 
-        <main style={{ position: 'relative', flex: 1, minWidth: 0 }}>
+        <main style={{ position: 'relative', flex: 1, minWidth: 0, paddingTop: 'env(safe-area-inset-top, 0px)' }}>
           {view === 'dashboard' && (
             <DashboardScreen
               onStartSession={handleStartSession}
