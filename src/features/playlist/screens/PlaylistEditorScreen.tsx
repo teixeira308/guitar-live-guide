@@ -372,7 +372,7 @@ export const PlaylistEditorScreen = ({ playlistId, onBack }: Props) => {
           </div>
         )}
 
-        <IonFab vertical="bottom" horizontal="end" slot="fixed" style={{ bottom: '16px' }}>
+        <IonFab vertical="bottom" horizontal="end" slot="fixed" style={{ bottom: 'calc(56px + env(safe-area-inset-bottom, 0px) + 16px)' }}>
           <IonFabButton onClick={() => setShowAddModal(true)} aria-label="Adicionar músicas">
             <IonIcon icon={add} />
           </IonFabButton>
